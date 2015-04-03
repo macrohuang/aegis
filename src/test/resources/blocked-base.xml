@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:stargate="http://fengchao.baidu.com/dtd/schema/stargate"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+	<import resource="ctx-skynet.xml"/>
+	<bean id="confcenter" class="java.lang.String">
+		<constructor-arg value="confcenter.properties" />
+	</bean>
+	
+	<bean id="customPolicy" class="com.baidu.fengchao.aegis.test.integration.CustomBeanPolicy" />
+	<bean id="customIds" class="com.baidu.fengchao.aegis.test.integration.CustomBeanIds" />
+	<bean id="businessService"	class="com.baidu.fengchao.aegis.test.service.impl.BusinessServiceImpl">
+		<property name="anotherService" ref="anotherService" />
+	</bean>
+	<bean id="businessService2"	class="com.baidu.fengchao.aegis.test.service.impl.BusinessServiceImpl2">
+		<property name="anotherService" ref="anotherService" />
+		<property name="skynetService" ref="skynetService" />
+	</bean>
+	<bean id="confClient" class="com.baidu.fengchao.ether.impl.ConfCenterClientFactory" factory-method="getConfCenterClient">
+		<constructor-arg value="confcenter.properties"></constructor-arg>
+	</bean>
+	<bean id="anotherService" class="com.baidu.fengchao.aegis.test.service.impl.AnotherServiceImpl" lazy-init="true">
+		<property name="businessService" ref="businessService" />
+	</bean>
+</beans>
