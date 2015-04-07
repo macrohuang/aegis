@@ -15,7 +15,7 @@
 	<aop:config>
 		<aop:aspect id="blockedAspect" ref="blockedAdvice">
 			<aop:pointcut id="blockedPointcut"
-				expression="execution(* com.baidu.fengchao.aegis.test.*.*Service*.*(..))" />
+				expression="execution(* com.macrohuang.aegis.test.*.*Service*.*(..))" />
 			<aop:around method="doAround" pointcut-ref="blockedPointcut" />
 		</aop:aspect>
 	</aop:config>

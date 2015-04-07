@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:stargate="http://fengchao.baidu.com/dtd/schema/stargate"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="aegis-rule-default" class="java.lang.String">
+		<constructor-arg value="aegis-rule.properties" />
+	</bean>
+	<alias name="aegis-rule-default" alias="aegis-rule"/>
+	
+	<bean id="aegis-client-default" class="java.lang.String">
+		<constructor-arg value="aegis-client.properties" />
+	</bean>
+	<alias name="aegis-client-default" alias="aegis-client"/>
+	
+	<bean id="aegisPropertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="order" value="100"></property>
+		<property name="ignoreUnresolvablePlaceholders" value="true"></property>
+		<property name="locations">
+			<list>
+				<value>classpath:aegis-client.properties</value>
+			</list>
+		</property>
+		<property name="placeholderPrefix">
+			<value>$[</value>
+		</property>
+		<property name="placeholderSuffix">
+			<value>]</value>
+		</property>
+		<property name="nullValue" value="" />
+	</bean>
+	
+	<!-- 封禁规则本地缓存类及回调接口容器 -->
+	<bean id="blockPointLocalCache" class="com.macrohuang.aegis.repository.BlockedPointLocalCache">
+		<property name="ruleFile" ref="aegis-rule" />
+	</bean>
+	
+	<!-- 封禁service，同时也是切面织面 -->
+	<bean id="blockedAdvice" class="com.macrohuang.aegis.api.BlockedServiceAspect">
+		<property name="pointLocalCache" ref="blockPointLocalCache" /> 
+	</bean>
+	
+	<!-- 取个优雅的别名，比较有意义 -->
+	<alias name="blockedAdvice" alias="aegisService"/>
+	
+	<!-- 基于内存的封禁计数存储 -->
+	<bean id="ramCounterRepository" class="com.macrohuang.aegis.repository.RamCounterRepository" lazy-init="true" />
+	
+	<!-- 基于redis的封禁计数存储 -->
+	<bean id="redisCounterRepository" class="com.macrohuang.aegis.repository.RedisCounterRepository" init-method="init" lazy-init="true">
+		<property name="address" value="$[redis.address]" />
+		<property name="passwd" value="$[redis.password]" />
+		<property name="timeout" value="$[redis.timeout]" />
+		<property name="maxActive" value="$[redis.maxActive]" />
+		<property name="maxIdle" value="$[redis.maxIdle]" />
+		<property name="maxWait" value="$[redis.maxWait]" />
+		<property name="testOnBorrow" value="$[redis.testOnBorrow]" />
+	</bean>
+</beans>
