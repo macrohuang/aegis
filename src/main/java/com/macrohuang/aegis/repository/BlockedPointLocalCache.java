@@ -46,7 +46,7 @@ public class BlockedPointLocalCache implements FileChangedCallback, ApplicationC
             return;
         }
         try {
-            refreshBlockedRules(FileUtils.readFileToString(FileChangedWatcher.getRealFile(ruleFile)));
+            refreshBlockedRules(FileUtils.readFileToString(FileChangedWatcher.getAbsoluteFile(ruleFile)));
         } catch (IOException e) {
             logger.error("Error while init rules", e);
             throw new RuntimeException("Error while init rules:" + e.getMessage());

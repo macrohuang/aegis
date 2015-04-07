@@ -26,11 +26,11 @@ public class AegisServiceTest {
     private BusinessService businessService;
     private BusinessService businessNoAop;
     private static final long userID = 112L;
+    ApplicationContext aContext = new ClassPathXmlApplicationContext("blocked-aop.xml");
+    ApplicationContext bContext = new ClassPathXmlApplicationContext("blocked-base.xml");
 
     @Before
     public void init() {
-        ApplicationContext aContext = new ClassPathXmlApplicationContext("blocked-aop.xml");
-        ApplicationContext bContext = new ClassPathXmlApplicationContext("blocked-base.xml");
         businessService = (BusinessService) aContext.getBean("businessService");
         businessNoAop = (BusinessService) bContext.getBean("businessService2");
     }

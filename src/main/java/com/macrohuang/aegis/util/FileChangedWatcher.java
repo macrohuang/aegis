@@ -82,7 +82,7 @@ public class FileChangedWatcher {
      */
     public void addCallback(String file, FileChangedCallback callback) {
         assert file != null && file.trim().length() > 0;
-        File f = getRealFile(file);
+        File f = getAbsoluteFile(file);
         // 暂不支持文件夹变更了，数据量可能会很大（比如整个文件系统），影响性能，看后续JDK版本有没有什么好的方式监控
         if (f.isDirectory()) {
             throw new RuntimeException("Watch on a directory is currently not supported!");
@@ -102,14 +102,12 @@ public class FileChangedWatcher {
      * @param file 文件名，可以是绝对路径、相对路径或者以classpath:开头的路径
      * @return 文件的绝对路径
      */
-    public static File getRealFile(String file) {
-        File f;
+    public static File getAbsoluteFile(String file) {
+        File f = new File(file);
         // 使用classpath:开头或者相对路径的，需要获取classpath目录下的文件，否则使用绝对路径
-        if (file.toLowerCase().startsWith(CLASS_PATH_PREFIX) || !file.startsWith(File.separator)) {
+        if (file.toLowerCase().startsWith(CLASS_PATH_PREFIX) || !f.isAbsolute()) {
             String filename = file.replace(CLASS_PATH_PREFIX, "");
             f = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath() + filename);
-        } else {
-            f = new File(file);
         }
         return f;
     }

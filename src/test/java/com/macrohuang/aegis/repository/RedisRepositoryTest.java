@@ -9,16 +9,13 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.macrohuang.aegis.repository.CounterRepository;
-import com.macrohuang.aegis.repository.RedisCounterRepository;
-
 public class RedisRepositoryTest {
 	private static final String key ="aegis_test_key";
 	private static final String key2 ="aegis_test_key_2";
     CounterRepository counterRepository;
+    ApplicationContext context = new ClassPathXmlApplicationContext("blocked-base.xml");
 	@Before
 	public void init(){
-        ApplicationContext context = new ClassPathXmlApplicationContext("blocked-base.xml");
         counterRepository = context.getBean(RedisCounterRepository.class);
 	}
 	@Test

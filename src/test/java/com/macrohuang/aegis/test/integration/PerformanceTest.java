@@ -22,10 +22,10 @@ public class PerformanceTest {
 	private BusinessService businessService;
 	private BusinessService businessServiceNoLimit;
 	private static final long userID = 112L;
+    ApplicationContext aContext = new ClassPathXmlApplicationContext("blocked-aop.xml");
+    ApplicationContext bContext = new ClassPathXmlApplicationContext("blocked-base.xml");
 	@Before
 	public void init() {
-		ApplicationContext aContext = new ClassPathXmlApplicationContext("blocked-aop.xml");
-		ApplicationContext bContext = new ClassPathXmlApplicationContext("blocked-base.xml");
 		businessService = (BusinessService) aContext.getBean("businessService");
 		businessServiceNoLimit = (BusinessService) bContext.getBean("businessService");
 	}

@@ -8,15 +8,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.macrohuang.aegis.api.BlockedConstants.BlockedTimeType;
-import com.macrohuang.aegis.api.BlockedConstants.BlockedType;
-import com.macrohuang.aegis.bo.BlockedPoint;
-import com.macrohuang.aegis.exception.TooFrequentInvokeException;
-import com.macrohuang.aegis.test.service.BusinessService;
-import com.macrohuang.aegis.test.service.BusinessService.MyUser;
-import com.macrohuang.aegis.test.service.ModWordRequest;
-import com.macrohuang.aegis.util.ThreadLocalHelper;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -31,16 +22,26 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
+import com.macrohuang.aegis.api.BlockedConstants.BlockedTimeType;
+import com.macrohuang.aegis.api.BlockedConstants.BlockedType;
+import com.macrohuang.aegis.bo.BlockedPoint;
+import com.macrohuang.aegis.exception.TooFrequentInvokeException;
+import com.macrohuang.aegis.test.service.BusinessService;
+import com.macrohuang.aegis.test.service.BusinessService.MyUser;
+import com.macrohuang.aegis.test.service.ModWordRequest;
+import com.macrohuang.aegis.util.ThreadLocalHelper;
+
 public class IntegrationTest {
 
 	private static final int COUNT = 10;
 	private BusinessService businessService;
 	private static final long userID = 112L;
 	private static final String userName = "Zhangsan";
+    private ApplicationContext context;
 	@Before
 	public void init() {
-		ApplicationContext aContext = new ClassPathXmlApplicationContext("blocked-aop.xml");
-		businessService = (BusinessService) aContext.getBean("businessService");
+        context = new ClassPathXmlApplicationContext("blocked-aop.xml");
+        businessService = (BusinessService) context.getBean("businessService");
 	}
 
 	@Test
@@ -130,7 +131,7 @@ public class IntegrationTest {
 	@Test
 	public void testCustomBeanPolicy() {
 		for (int i = 0; i < COUNT; i++) {
-			System.out.println(businessService.hello(1234, "张三"));
+            System.out.println(businessService.hello(1234, "张三"));
 		}
 	}
 
@@ -139,7 +140,7 @@ public class IntegrationTest {
 		boolean exceed = false;
 		ThreadLocalHelper.bindBlockedKey(new Integer[] { 1234 });
 		for (int i = 0; i < COUNT; i++) {
-			String result = businessService.hello2(1234, "张三");
+            String result = businessService.hello2(1234, "张三");
 			if (CustomBeanPolicy.s.equals(result)) {
 				exceed = true;
 			}
