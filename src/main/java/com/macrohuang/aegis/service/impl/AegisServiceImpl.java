@@ -45,7 +45,7 @@ public class AegisServiceImpl implements AegisService {
         return null;
     }
 
-    protected Object check(String pointId, Object... params) throws TooFrequentInvokeException {
+    public Object check(String pointId, Object...params) throws TooFrequentInvokeException {
         BlockedPoint blockedPoint = getPointLocalCache().getBlockedPoint(pointId);
         if (blockedPoint != null) {
             for (BlockedRule rule : blockedPoint.getRules()) {

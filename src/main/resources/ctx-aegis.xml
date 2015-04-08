@@ -11,23 +11,13 @@
 						http://www.springframework.org/schema/aop
 						http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-	<bean id="aegis-rule-default" class="java.lang.String">
-		<constructor-arg value="aegis-rule.properties" />
-	</bean>
-	<alias name="aegis-rule-default" alias="aegis-rule"/>
-	
-	<bean id="aegis-client-default" class="java.lang.String">
-		<constructor-arg value="aegis-client.properties" />
-	</bean>
-	<alias name="aegis-client-default" alias="aegis-client"/>
-	
 	<bean id="aegisPropertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="order" value="100"></property>
 		<property name="ignoreUnresolvablePlaceholders" value="true"></property>
 		<property name="locations">
 			<list>
-				<value>classpath:aegis-client.properties</value>
+				<value>classpath:aegis-redis.properties</value>
 			</list>
 		</property>
 		<property name="placeholderPrefix">
@@ -41,7 +31,7 @@
 	
 	<!-- 封禁规则本地缓存类及回调接口容器 -->
 	<bean id="blockPointLocalCache" class="com.macrohuang.aegis.repository.BlockedPointLocalCache">
-		<property name="ruleFile" ref="aegis-rule" />
+		<property name="ruleFile" value="aegis-rule.properties" />
 	</bean>
 	
 	<!-- 封禁service，同时也是切面织面 -->

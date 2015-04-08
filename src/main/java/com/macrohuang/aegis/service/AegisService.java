@@ -17,6 +17,8 @@ import com.macrohuang.aegis.exception.TooFrequentInvokeException;
 public interface AegisService {
     Object check(Object... params) throws TooFrequentInvokeException;
 
+    Object check(String pointId, Object...params) throws TooFrequentInvokeException;
+
     void addRuleChangedCallback(BlockedRuleChangedCallback callback);
 
     void revomeRuleChangedCallback(BlockedRuleChangedCallback callback);

@@ -135,12 +135,16 @@ public class BlockedPointLocalCache implements FileChangedCallback, ApplicationC
 
     @Override
     public void fileChanged(File file) {
-        try {
-            String content = FileUtils.readFileToString(file);
-            logger.warn("[AEGIS]ConfCenter file changed, params[{}]", content);
-            refreshBlockedRules(content);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+        if (file.exists()) {
+            try {
+                String content = FileUtils.readFileToString(file);
+                logger.warn("[AEGIS]ConfCenter file changed, params[{}]", content);
+                refreshBlockedRules(content);
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
+        } else {
+            throw new RuntimeException("File not exists:" + file.getAbsolutePath());
         }
     }
 }
