@@ -47,7 +47,7 @@ public class ShardingPool {
         return ShardingPool.shards;
     }
 
-    protected String getShardID(String serviceID) {
+    public String getShardID(String serviceID) {
         if (serviceID == null || shards == 1) {
             return "0";
         }
@@ -115,6 +115,7 @@ public class ShardingPool {
             }
         }
         Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
             public void run() {
                 Set<Entry<String, JedisPool>> poolSet = shardingPool.entrySet();
                 for (Entry<String, JedisPool> pool : poolSet) {
