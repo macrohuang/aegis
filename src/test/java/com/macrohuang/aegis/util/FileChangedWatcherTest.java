@@ -32,7 +32,8 @@ public class FileChangedWatcherTest {
             public void fileChanged(File file) {
                 System.out.println("File:" + file.getName() + " has been changed");
                 try {
-                    System.out.println(FileUtils.readFileToString(file));
+                    file.createNewFile();
+                    System.out.println("File content:" + FileUtils.readFileToString(file));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
